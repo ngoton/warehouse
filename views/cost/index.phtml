@@ -1,0 +1,918 @@
+
+<?php
+$url_order = 'ASC';
+if ($order_by == 'cost_id')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'cost_money')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'cost_date')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'cost_comment')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'customer_name')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($order_by == 'cost_list_name')
+    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+
+    $i = $sonews*$page-($sonews-1);
+
+?>
+
+<div id="loading"></div>
+<div id="winpopup"></div>
+<section class="content-header">
+    <h1>CHI PHÍ SẢN XUẤT</h1>
+  <ol class="breadcrumb">
+    <li><a href="<?php echo $this->url('admin') ?>"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li class="active"><a href="<?php echo $this->url('cost') ?>">Chi phí</a></li>
+  </ol>
+</section>
+<div id="content" style="padding:5px;">
+
+    <div class="search-box">
+        
+        <input type="search" id="search-input" name="s" value="<?php echo isset($keyword)?$keyword:null; ?>" placeholder="Tìm kiếm">
+        <input type="button" name="" id="search-submit" class="button-search" value="Tìm kiếm" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">
+        <?php if(!isset($disable_control)){ ?>
+        <div class="add-box"><a class="add_button" id="btnExport" ><i class="fa fa-download"></i> Xuất</a></div>
+        <div class="add-box"><a class="add_button" onClick="add_click();"><i class="fa fa-plus"></i> Thêm mới</a></div>
+        <?php } ?>
+    </div>
+    <div class="tablenav top">
+
+        <div class="add-box">
+
+            <select id="sl_round" name="sl_round" style="width:90px">
+
+             <?php 
+
+                for ($k=1; $k < 13; $k++) { 
+
+                    echo '<option value="'.$k.'">Tháng '.$k.'</option>';
+
+                }
+
+             ?>
+
+            </select>
+
+            <select id="sl_staff" name="sl_staff" style="width:100px">
+
+             <?php 
+
+                $nam = date('Y');
+
+                for ($k=($nam-5); $k < ($nam+5); $k++) { 
+
+                    echo '<option value="'.$k.'">Năm '.$k.'</option>';
+
+                }
+
+             ?>
+
+            </select>
+
+
+
+            <input type="button" name="xem" id="xem" value="Xem" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
+
+            
+
+        </div>
+
+    </div>
+
+    <div class="tablenav top">
+
+        <div style="clear:both"></div>
+
+        <div class="add-box">
+
+                  
+
+            Từ  <input style="width:80px" type="search" name="batdau" id="batdau" placeholder="Chọn ngày" <?php if(isset($batdau)) echo "value='$batdau'"; ?> >  
+
+            Đến  <input style="width:80px" type="search" name="ketthuc" id="ketthuc" placeholder="Chọn ngày" <?php if(isset($ketthuc)) echo "value='$ketthuc'"; ?> >  
+
+             <input type="button" name="xem" id="xem" value="Xem" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
+
+            
+
+        </div>
+
+        <div style="clear:both"></div>
+        
+        <div class="add-box">
+            <input type="button" name="chon" id="chon" value="Chọn" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">  
+        </div>
+        <div class="add-box" style="margin-right: 5px">
+            <select style="width:120px" name="sl_nv" id="sl_nv">
+                <option value="0">Người nhận</option>
+                <?php foreach ($customers as $sm) { ?>
+                <option value="<?php echo $sm->customer_id ?>"><?php echo $sm->customer_name ?></option>
+                <?php } ?>
+            </select>
+            
+            
+        </div>
+
+      </div>
+    <div class="tablenav top">
+        <?php if(!isset($disable_control)){ ?>
+        <div class="alignleft actions">
+            <select name="action" id="action">
+                <option value="-1" selected="selected">Chọn</option>
+                
+                <option value="delete">Xóa</option>
+            </select>
+            <input type="button" name="" id="doaction" class="button action" value="Áp dụng" onclick="action();">
+        </div>
+        <?php } ?>
+        <div class="alignleft actions">
+        <select name="m" id="chonloc">
+          <option  value="18446744073709">Hiển thị tất cả</option>
+          <option value="50">Hiển thị 50 giá trị</option>
+                <option value="100">Hiển thị 100 giá trị</option>
+                <option value="150">Hiển thị 150 giá trị</option>
+                <option selected="selected" value="200">Hiển thị 200 giá trị</option>
+        </select>
+        <input type="button" name="" id="post-query-submit" class="button" value="Chọn lọc" onclick="searchall('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');">                               
+        </div>
+
+      </div>
+
+</div>
+
+<table class="table_data" id="tblExport">
+  <thead>
+      <tr>
+          <th class="fix"><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall"/></th>
+          <th class="fix">
+              <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','cost_id','<?php echo $url_order ?>')">STT <?php if ($order_by == 'cost_id'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+          </th>
+          <th  class="fix">
+              <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','cost_date','<?php echo $url_order ?>')">Ngày <?php if ($order_by == 'cost_date'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+          </th>
+          <th  class="fix">
+              <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','customer_name','<?php echo $url_order ?>')">Người nhận <?php if ($order_by == 'customer_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+          </th>
+          <th  class="fix">
+              <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','cost_comment','<?php echo $url_order ?>')">Nội dung <?php if ($order_by == 'cost_comment'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+          </th>
+          <th  class="fix">
+              <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','cost_money','<?php echo $url_order ?>')">Số tiền <?php if ($order_by == 'cost_money'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+          </th>
+          <th  class="fix">
+              <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','cost_list_name','<?php echo $url_order ?>')">Chi phí <?php if ($order_by == 'cost_list_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+          </th>
+             
+          <?php if(!isset($disable_control)){ ?>
+             
+          <th  class="fix">&nbsp;</th>
+          <?php } ?>
+      </tr>
+      
+     </thead>
+     <tbody>
+      <?php $tongtien = 0;
+      foreach ($costs as $cost) : 
+      $tongtien += $cost->cost_money;
+        ?>
+          <tr onClick="HighLightTR(this,'#4d90fe','cc3333');" id="<?php echo $cost->cost_id ?>" class="edit_tr">
+              <td><input name="check[]" type="checkbox" class="checkbox" value="<?php echo $cost->cost_id ?>"></td>
+              <td class="fix"><?php echo $i++; ?></td>
+              <td class="fix"  id="cost_date_<?php echo $cost->cost_id; ?>"><?php echo $lib->hien_thi_ngay_thang($cost->cost_date) ?></td>
+              <td class="fix"  id="cost_customer_<?php echo $cost->cost_id; ?>" data="<?php echo $cost->cost_customer ?>"><?php echo $cost->customer_name ?></td>
+              <td class="fix"  id="cost_comment_<?php echo $cost->cost_id; ?>"><?php echo $cost->cost_comment ?></td>
+              <td class="fix"  id="cost_money_<?php echo $cost->cost_id; ?>"><?php echo $lib->formatMoney($cost->cost_money) ?></td>
+              <td class="fix"  id="cost_list_<?php echo $cost->cost_id; ?>"><?php echo $cost->cost_list_name ?></td>
+              <td class="fix" style="display:none" id="cost_document_<?php echo $cost->cost_id; ?>"><?php echo $cost->cost_document ?></td>
+              <td class="fix" style="display:none" id="cost_document_date_<?php echo $cost->cost_id; ?>"><?php echo $lib->hien_thi_ngay_thang($cost->cost_document_date) ?></td>
+              <td class="fix" style="display:none" id="check_vat_<?php echo $cost->cost_id; ?>"><?php echo $cost->check_vat ?></td>
+              
+              <?php if(!isset($disable_control)){ ?>
+              <td class="pull-right">
+                  <button class="btn btn-sm btn-flat btn-primary"><i class="fa fa-edit"></i> Sửa</button>
+                  <button class="btn btn-sm btn-flat btn-danger" onclick="del(<?php echo $cost->cost_id ?>)" ><i class="fa fa-remove"></i> Xóa</button>
+              </td>
+              <?php } ?>
+          </tr>
+      <?php endforeach; ?>
+      <tr  style="font-weight: bold; color: rgb(23, 119, 226);" >
+            
+            <th colspan="5" style="border-right: 1px solid rgb(236, 235, 235);border-top: 1px solid #80C8E5;padding: 7px; text-align: right;" >
+                Tổng cộng
+            </th>
+            
+            <td class="fix" ><?php echo $lib->formatMoney($tongtien) ?></td>
+            <td class="fix" ></td>
+        </tr>
+     </tbody>
+  </table>
+
+
+<?php
+$this->helper('slidePaginator');
+?>
+<div class="add-field">
+
+    <section class="content">
+
+      <div class="row">
+
+        <!-- left column -->
+
+        <div class="col-md-12">
+
+          <!-- general form elements -->
+
+          <div class="box box-primary">
+
+            <!-- /.box-header -->
+
+            <!-- form start -->
+
+            <form id="add_cost" role="form" method="post" action="" enctype="multipart/form-data">
+
+              <div class="row">
+                <div class="col-md-4 col-xs-6">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label for="cost_date">Ngày</label>
+                      <input class="ngay" type="text" id="cost_date"  name="cost_date" tabindex="1" required="required" >
+                    </div>
+                    <div class="form-group">
+                      <label for="cost_comment">Nội dung</label>
+                      <input type="text" id="cost_comment"  name="cost_comment" tabindex="4" >
+                    </div>
+                    
+                  </div>
+                  <!-- /.box-body -->
+                  
+                </div>
+                <div class="col-md-4 col-xs-6">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label for="cost_list">Chi phí</label>
+                      <select id="cost_list"  name="cost_list" tabindex="2" required="required" >
+                        <?php foreach ($cost_lists as $cost_list) { ?>
+                          <option value="<?php echo $cost_list->cost_list_id ?>"><?php echo $cost_list->cost_list_name ?></option>
+                        <?php } ?>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="cost_money">Số tiền</label>
+                      <input style="width:150px" class="numbers" type="text" id="cost_money"  name="cost_money" tabindex="5" required="required" >
+                      <input type="checkbox" id="check_vat" name="check_vat" value="1"> VAT
+                    </div>
+                    
+                  </div>
+                  <!-- /.box-body -->
+                  
+                </div>
+                <div class="col-md-4 col-xs-6">
+
+                  <div class="box-body">
+
+                    <div class="form-group">
+
+                      <label for="cost_customer">Người nhận <a target="_blank" title="Thêm khách hàng" href="<?php echo $this->url('customer') ?>"><i class="fa fa-plus"></i></a></label>
+
+                      <input type="text" autocomplete="off" id="cost_customer"  name="cost_customer" tabindex="3"  placeholder="Nhập tên hoặc * để chọn" required="required" >
+
+                        <ul id="customer_list_id"></ul>
+
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-7 col-xs-7">
+                              <label for="cost_document">Hóa đơn chứng từ</label>
+                              <input style="width:100px" type="text" id="cost_document"  name="cost_document" tabindex="6"  >
+                          </div>
+                          <div class="col-md-5 col-xs-5">
+                            <label for="cost_document_date">Ngày</label>
+                              <input style="width:60px" class="ngay" type="text" id="cost_document_date"  name="cost_document_date" tabindex="7"  >
+                          </div>
+                      </div>
+                    </div>
+
+
+                  </div>
+
+                  <!-- /.box-body -->
+
+
+                </div>
+
+                
+              <?php if(!isset($disable_control)){ ?>
+
+              <div class="row">
+
+                <div class="col-md-12">
+
+                    <div class="box-footer">
+
+                    <input type="hidden" readonly id="yes" name="yes" required="required" >
+
+                    <button type="submit" class="btn btn-primary" tabindex="8">Hoàn thành</button>
+
+                    <button type="reset" class="btn" tabindex="9">Nhập lại</button>
+
+                  </div>
+
+                  <div class="box-footer">
+
+                    <div id="error" class="error"><?php echo isset($error) ? $error : null; ?></div>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+              <?php } ?>
+
+            </form>
+
+          </div>
+
+          <!-- /.box -->
+
+
+
+        </div>
+
+        <!--/.col (left) -->
+
+        
+
+      </div>
+
+      <!-- /.row -->
+
+    </section>
+
+    <!-- /.content -->
+
+       
+
+</div>
+
+<script type="text/javascript">
+$('html').click(function(e) {
+    $('#customer_list_id').slideUp(200);
+});
+
+    $('.edit_tr').click(function(e){
+        if(!$('.checkbox').is(':focus') && e.target.nodeName != "A"){
+            if(!$('.checkbox').is(':focus')){
+                $("html, body").animate({ scrollTop: $('.add-field').offset().top }, 300);
+            }
+            
+            
+            var cost_date = $(this).find("#cost_date_"+$(this).attr('id')).text();
+            var cost_comment = $(this).find("#cost_comment_"+$(this).attr('id')).text();
+            var cost_customer = $(this).find("#cost_customer_"+$(this).attr('id')).attr('data');
+            var cost_customer_name = $(this).find("#cost_customer_"+$(this).attr('id')).text();
+            var cost_list = $(this).find("#cost_list_"+$(this).attr('id')).text();
+            var cost_money = $(this).find("#cost_money_"+$(this).attr('id')).text();
+            var cost_document = $(this).find("#cost_document_"+$(this).attr('id')).text();
+            var cost_document_date = $(this).find("#cost_document_date_"+$(this).attr('id')).text();
+            var check_vat = $(this).find("#check_vat_"+$(this).attr('id')).text();
+            
+            
+            //alert(cost_code);
+            $('#yes').val($(this).attr('id'));
+            
+            
+            $('#cost_customer').attr('data',cost_customer);
+            $('#cost_customer').val(cost_customer_name);
+            $('#cost_customer').attr('code',true);
+            $('#cost_date').val(cost_date.replace(/\//g,"-"));
+            $('#cost_comment').val(cost_comment);
+            $('#cost_money').val(cost_money);
+            $('#cost_document').val(cost_document);
+            $('#cost_document_date').val(cost_document_date.replace(/\//g,"-"));
+            $('#cost_list option:contains('+cost_list+')').attr('slected','selected');
+            
+            if (check_vat == 1) {
+              $('#check_vat').prop('checked',true);
+            }
+            else{
+              $('#check_vat').prop('checked',false);
+            }
+
+
+            $( ".add-field" ).dialog( "open" );
+        }
+    });
+</script>
+<script type="text/javascript">
+
+function add_click(){
+    $('#yes').val("");
+    $('.add-field').slideDown(500);
+     $("html, body").animate({ scrollTop: $('.add-field').offset().top }, 300);   
+        
+        $('#cost_customer').attr('data',"");
+        $('#cost_customer').val("");
+        $('#cost_customer').attr('code',false);
+        $('#cost_date').val("");
+        $('#cost_comment').val("");
+        $('#cost_money').val("");
+        $('#cost_document').val("");
+        $('#cost_document_date').val("");
+        $('#check_vat').prop('checked',false);
+        
+
+        $('.number').focus(function(){
+            if ( $(this).val() == '0') {
+               $(this).val(""); 
+            };
+            
+        });
+        $('.number').blur(function(){
+            if ( $(this).val() == "") {
+                $(this).val(0);
+            };
+            
+        });
+
+
+   $( ".add-field" ).dialog( "open" );
+
+}
+
+
+$(document).ready(function(){
+            // Validate form
+            $("#add_cost").validate({
+                errorElement: "span", // Định dạng cho thẻ HTML hiện thông báo lỗi
+                rules: {
+                    
+                },
+                submitHandler: function(form) {
+
+                  if ($('#cost_customer').attr('code') == 'false') {
+
+                        $('#cost_customer').val("");
+
+                        $('#cost_customer').focus();
+
+                        return false;
+
+                    };
+                
+                    var cost_date = $('#cost_date').attr('value');
+                    var cost_comment = $('#cost_comment').attr('value');
+                    var cost_customer = $('#cost_customer').attr('data');
+                    var cost_money = $('#cost_money').attr('value');
+                    var cost_list = $('#cost_list').attr('value');
+                    var cost_document = $('#cost_document').attr('value');
+                    var cost_document_date = $('#cost_document_date').attr('value');
+                    if($('#check_vat').is(':checked'))
+                      var check_vat = 1;
+                    else
+                      var check_vat = 0;
+
+                    
+                    var yes = $('#yes').attr('value');
+                    
+                    var action      = "them";
+                 
+                    $.ajax({
+                        type: "POST", // phương thức gởi đi
+                        url: "<?php echo BASE_URL ?>/cost/add", // nơi mà dữ liệu sẽ chuyển đến khi submit
+                        data: {
+                            cost_list: cost_list,
+                            cost_customer: cost_customer,
+                            cost_date: cost_date,
+                            cost_comment: cost_comment,
+                            cost_money: cost_money,
+                            cost_document: cost_document,
+                            cost_document_date: cost_document_date,
+                            check_vat: check_vat,
+                            yes: yes,
+                            }, // giá trị post
+                        success: function(answer){ // if everything goes well
+                            //alert(answer);
+                            $('#error').hide();
+                            $('#error').slideToggle(100); // hiển thị thẻ div success
+                            $('#error').html('<div class="successbox">'+answer+'</div>'); // đặt kết quả trả về từ test.php vào thẻ div success
+                            $('#error').fadeOut(10000);
+
+                            if (yes != "") {
+                                if (answer.trim() != "Thông tin này đã tồn tại" ) {
+                                  setTimeout(function() {
+                                        sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
+                                      }, 200);
+                                    $('#cost_name_'+yes).text(cost_name);
+                                    $('#province_name_'+yes).text($('#province option:selected').text());
+                                }
+                            }
+                            else{
+                                if (answer.trim() != "Thông tin này đã tồn tại") {
+                                  setTimeout(function() {
+                                        sapxep('<?php echo $page ?>','<?php echo $order_by ?>','<?php echo $order ?>');
+                                      }, 200);
+                                    var lastID = parseInt($('#lasted').html());
+                                    var rowCount = parseInt($('.table_data > tbody > tr').length);
+                                    $('.table_data > tbody:last')
+                                    .append(
+                                        '<tr onclick="HighLightTR(this,#4d90fe,cc3333);" id="'+parseInt(lastID+1)+'" class="edit_tr"><td><input name="check[]" type="checkbox" class="checkbox" value="'+parseInt(lastID+1)+'"></td><td class="fix">'+parseInt(rowCount+1)+'</td><td class="fix" id="cost_name_'+parseInt(lastID+1)+'">'+cost_name+'</td><td class="fix" data="'+province+'" id="province_name_'+parseInt(lastID+1)+'">'+$('#province option:selected').text()+'</td><td><a class="error" href="#">Sửa</a> | <a class="error" onclick="del('+parseInt(lastID+1)+')">Xóa</a></td></tr>'
+                                    );
+
+                                    $('#lasted').html(parseInt(lastID+2));
+                                }
+                            }
+                        }
+                    });
+                    return false;
+                     
+                 }
+            });
+   
+  $('#cost_customer').keyup(function(){
+      
+        var keyword = $(this).val();
+        $.ajax({
+            url: '<?php echo BASE_URL ?>/cost/getcustomer',
+            type: 'POST',
+            data: {keyword:keyword},
+            success:function(data){
+                $('#customer_list_id').slideDown(200);
+                $('#customer_list_id').html(data);
+            }
+        });
+        if ($('#cost_customer').val() == "" || $('#cost_customer').attr('data') == "") {
+            //$('#loc_from').val("");
+            $('#cost_customer').attr('data',"");
+            $('#cost_customer').attr('code',false);
+        }
+      
+   });
+
+   
+   
+    $('.number').keyup(function(event) {
+
+          // skip for arrow keys
+      if(event.which >= 37 && event.which <= 40) return;
+
+      // format number
+      $(this).val(function(index, value) {
+        return value
+          .replace(/[^0-9-.]/g, "")
+        ;
+      });
+    });
+   
+   $('.numbers').keyup(function(event) {
+
+          // skip for arrow keys
+      if(event.which >= 37 && event.which <= 40) return;
+
+      // format number
+      $(this).val(function(index, value) {
+        return value
+          .replace(/[^0-9]/g, "")
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        ;
+      });
+    });
+    
+
+});
+function get_number(id){
+    return $(id).val().replace(/\,/g,'');
+}
+function set_item_customer(value,name) {
+    // change input value
+    $('#cost_customer').val(name);
+    $("#cost_customer").attr("data",value);
+    $("#cost_customer").attr("code",'true');
+    
+    // hide proposition list
+    $('#customer_list_id').hide();
+    $('#cost_customer').focus();
+     
+}
+
+  
+</script>
+<script type="text/javascript">
+
+    $(function() {
+
+    var pickerOpts = {
+
+        closeText: "Đóng",
+
+        currentText: "Hiện tại",
+
+        nextText: "Tiếp",
+
+        prevText: "Quay lại",
+
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm",
+
+        "Thứ sáu", "Thứ bảy"],
+
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5",
+
+        "T6", "T7"],
+
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5",
+
+        "T6", "T7"],
+
+        //defaultDate: "+1w",
+
+        changeMonth: true,
+
+        changeYear: true,
+
+        dateFormat: 'dd-mm-yy',
+
+        firstDay: 1,
+
+        isRTL: false,
+
+        showButtonPanel: true,
+
+         
+
+    };  
+
+    $(".ngay").datepicker(pickerOpts);
+
+
+
+    
+
+              
+
+            
+
+    
+
+});
+
+
+
+</script>
+<div style="display:none" id="lasted"></div>
+<script type="text/javascript">
+    var count = parseInt(<?php echo $lastID ?>);
+    $('#lasted').html(count);
+
+$("#import_excel").click(function(){
+        $("#winpopup").dialog({
+            draggable:true,
+            modal: true,
+            autoOpen: false,
+            height:300,
+            width:400,
+            resizable: false,
+            title:'Import Excel',
+            
+        });
+        $("#winpopup").load($(this).attr('href'));
+        $("#winpopup").dialog("open");
+         
+        return false;
+    });
+</script>
+</div>
+
+<script type="text/javascript">
+var l = "<?php echo $limit ?>";
+$('#chonloc option[value='+l+']').attr('selected','selected');
+
+$( ".add-field" ).dialog({
+    autoOpen: false,
+    modal: true,
+    width: "auto",
+    title: "Chi phí sản xuất",
+    hide: 'fold',
+    show: 'blind'
+});
+
+
+</script>
+
+<style type="text/css">
+    #ui-datepicker-div{
+        font-size: 13px;
+    }
+</style>
+<script type="text/javascript">
+$(function() {
+
+    var pickerOpts = {
+
+        closeText: "Đóng",
+
+        currentText: "Hiện tại",
+
+        nextText: "Tiếp",
+
+        prevText: "Quay lại",
+
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm",
+
+        "Thứ sáu", "Thứ bảy"],
+
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5",
+
+        "T6", "T7"],
+
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5",
+
+        "T6", "T7"],
+
+        //defaultDate: "+1w",
+
+        changeMonth: true,
+
+        changeYear: true,
+
+        dateFormat: 'dd-mm-yy',
+
+        firstDay: 1,
+
+        isRTL: false,
+
+        showButtonPanel: true,
+
+        onClose: function(selectedDate) {
+
+                
+
+                $( "#ketthuc" ).datepicker( "option", "minDate", selectedDate );
+
+
+
+         },
+
+         
+
+    };  
+
+    $("#batdau").datepicker(pickerOpts);
+
+
+
+    var pickerOpts4 = {
+
+        closeText: "Đóng",
+
+        currentText: "Hiện tại",
+
+        nextText: "Tiếp",
+
+        prevText: "Quay lại",
+
+        monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+
+        monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+
+        dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm",
+
+        "Thứ sáu", "Thứ bảy"],
+
+        dayNamesShort: ["CN", "T2", "T3", "T4", "T5",
+
+        "T6", "T7"],
+
+        dayNamesMin: ["CN", "T2", "T3", "T4", "T5",
+
+        "T6", "T7"],
+
+        //defaultDate: "+1w",
+
+        changeMonth: true,
+
+        changeYear: true,
+
+        dateFormat: 'dd-mm-yy',
+
+        firstDay: 1,
+
+        isRTL: false,
+
+        showButtonPanel: true,
+
+        onClose: function(selectedDate) {
+
+                
+
+                $( "#batdau" ).datepicker( "option", "maxDate", selectedDate );
+
+                
+
+         },
+
+         
+
+    };  
+
+    $("#ketthuc").datepicker(pickerOpts4);
+
+              
+
+            
+
+    
+
+});
+
+var ch = "<?php echo $limit ?>";
+$('#chonloc option[value='+ch+']').attr('selected','selected');
+
+var tt = "<?php echo $kh ?>";
+$('#sl_nv option[value='+tt+']').attr('selected','selected');
+
+
+var v = "<?php echo $vong ?>";
+
+$('#sl_round option[value='+v+']').attr('selected','selected');
+
+
+
+var tt = "<?php echo $trangthai ?>";
+
+$('#sl_staff option[value='+tt+']').attr('selected','selected');
+
+</script>
+<script type="text/javascript">
+
+    
+
+    $('#sl_round').change(function(){
+
+        var m = $(this).val();
+
+        var y = $('#sl_staff').val();
+
+        var firstDay = new Date(y, m-1, 1);
+
+        var lastDay = new Date(y, m, 0);
+
+
+
+        $('#batdau').datepicker("setDate", firstDay );
+
+        $('#ketthuc').datepicker("setDate", lastDay );
+
+
+
+    });
+
+
+
+    $('#sl_staff').change(function(){
+
+        var y = $(this).val();
+
+        var m = $('#sl_round').val();
+
+        var firstDay = new Date(y, m-1, 1);
+
+        var lastDay = new Date(y, m, 0);
+
+
+
+        $('#batdau').datepicker("setDate", firstDay );
+
+        $('#ketthuc').datepicker("setDate", lastDay );
+
+
+
+    });
+
+
+
+
+</script>
