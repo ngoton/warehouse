@@ -303,6 +303,8 @@ elseif ($order_by == 'customer_name')
 
             <td class="fix" style="display:none" id="shipment_list_<?php echo $vat->vat_id; ?>"><?php echo $vat->shipment_list; ?></td>
 
+            <td class="fix" style="display:none" id="vat_percent_<?php echo $vat->vat_id; ?>"><?php echo $vat->vat_percent; ?></td>
+
             <?php if(!isset($disable_control)){ ?>
 
             <td class="pull-right">
@@ -552,7 +554,8 @@ $this->helper('slidePaginator');
                     <table class="pull-right">
 
                         <tr>
-
+                            <td></td>
+                            <td></td>
                             <td>Cộng</td>
 
                             <td><input type="text" class="text-right numbers" id="vat_sum"  name="vat_sum" disabled ></td>
@@ -560,6 +563,8 @@ $this->helper('slidePaginator');
                         </tr>
 
                         <tr>
+                            <td>VAT </td>
+                            <td style="width:30%" ><input style="width:30px" type="text" class="text-left number" id="vat_percent"  name="vat_percent" value="10" ></td>
 
                             <td>Tiền thuế GTGT</td>
 
@@ -568,7 +573,8 @@ $this->helper('slidePaginator');
                         </tr>
 
                         <tr>
-
+                            <td></td>
+                            <td></td>
                             <td>Tổng cộng thanh toán</td>
 
                             <td><input type="text" class="text-right numbers" id="vat_price_total"  name="vat_price_total" disabled ></td>
@@ -671,7 +677,10 @@ $('html').click(function(e) {
 
             var shipment_list = $(this).find("#shipment_list_"+$(this).attr('id')).text();
 
+            var vat_percent = $(this).find("#vat_percent_"+$(this).attr('id')).text();
 
+
+            $('#vat_percent').val(vat_percent);
 
             $('#vat_number').val(vat_number);
 
@@ -832,16 +841,17 @@ $('html').click(function(e) {
 
 
                     var total = 0;
+                    var percent = parseFloat($('#vat_percent').val())/100;
 
                       $('.vat_out_total').each(function() { 
 
                         total += parseFloat($(this).val().replace(/\,/g, ""));
 
-                        $('#vat_sum').val(total);
+                        $('#vat_sum').val(Math.round(total*100)/100)
 
-                        $('#vat_price').val(Math.round(total*0.1));
+                        $('#vat_price').val(Math.round(total*percent*100)/100);
 
-                        $('#vat_price_total').val(total+Math.round(total*0.1));
+                        $('#vat_price_total').val(Math.round(total*100)/100+Math.round(total*percent*100)/100);
 
                     });
 
@@ -865,25 +875,26 @@ $('html').click(function(e) {
 
                           Math.round(
 
-                          price*number
+                          price*number*100
 
-                          )
+                          )/100
 
                       );
 
 
 
                       var total = 0;
+                      var percent = parseFloat($('#vat_percent').val())/100;
 
                       $('.vat_out_total').each(function() { 
 
                         total += parseFloat($(this).val().replace(/\,/g, ""));
 
-                        $('#vat_sum').val(total);
+                        $('#vat_sum').val(Math.round(total*100)/100)
 
-                        $('#vat_price').val(Math.round(total*0.1));
+                        $('#vat_price').val(Math.round(total*percent*100)/100);
 
-                        $('#vat_price_total').val(total+Math.round(total*0.1));
+                        $('#vat_price_total').val(Math.round(total*100)/100+Math.round(total*percent*100)/100);
 
                     });
 
@@ -901,11 +912,11 @@ $('html').click(function(e) {
 
                             total += parseFloat($(this).val().replace(/\,/g, ""));
 
-                            $('#vat_sum').val(total);
+                            $('#vat_sum').val(Math.round(total*100)/100)
 
-                            $('#vat_price').val(Math.round(total*0.1));
+                            $('#vat_price').val(Math.round(total*percent*100)/100);
 
-                            $('#vat_price_total').val(total+Math.round(total*0.1));
+                            $('#vat_price_total').val(Math.round(total*100)/100+Math.round(total*percent*100)/100);
 
                         });
 
@@ -927,8 +938,6 @@ $('html').click(function(e) {
 
                           return value
 
-                            .replace(/\D/g, "")
-
                             .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
                           ;
@@ -940,8 +949,6 @@ $('html').click(function(e) {
                       $('.vat_out_total:eq('+rowIndex+')').val(function(index, value) {
 
                           return value
-
-                            .replace(/\D/g, "")
 
                             .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
@@ -971,25 +978,26 @@ $('html').click(function(e) {
 
                           Math.round(
 
-                          price*number
+                          price*number*100
 
-                          )
+                          )/100
 
                       );
 
 
 
                       var total = 0;
+                      var percent = parseFloat($('#vat_percent').val())/100;
 
                       $('.vat_out_total').each(function() { 
 
                         total += parseFloat($(this).val().replace(/\,/g, ""));
 
-                        $('#vat_sum').val(total);
+                        $('#vat_sum').val(Math.round(total*100)/100)
 
-                        $('#vat_price').val(Math.round(total*0.1));
+                        $('#vat_price').val(Math.round(total*percent*100)/100);
 
-                        $('#vat_price_total').val(total+Math.round(total*0.1));
+                        $('#vat_price_total').val(Math.round(total*100)/100+Math.round(total*percent*100)/100);
 
                     });
 
@@ -1007,11 +1015,11 @@ $('html').click(function(e) {
 
                             total += parseFloat($(this).val().replace(/\,/g, ""));
 
-                            $('#vat_sum').val(total);
+                            $('#vat_sum').val(Math.round(total*100)/100)
 
-                            $('#vat_price').val(Math.round(total*0.1));
+                            $('#vat_price').val(Math.round(total*percent*100)/100);
 
-                            $('#vat_price_total').val(total+Math.round(total*0.1));
+                            $('#vat_price_total').val(Math.round(total*100)/100+Math.round(total*percent*100)/100);
 
                         });
 
@@ -1033,8 +1041,6 @@ $('html').click(function(e) {
 
                           return value
 
-                            .replace(/\D/g, "")
-
                             .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
                           ;
@@ -1046,8 +1052,6 @@ $('html').click(function(e) {
                       $('.vat_out_total:eq('+rowIndex+')').val(function(index, value) {
 
                           return value
-
-                            .replace(/\D/g, "")
 
                             .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
@@ -1068,8 +1072,6 @@ $('html').click(function(e) {
                       $('.numbers').val(function(index, value) {
 
                           return value
-
-                            .replace(/\D/g, "")
 
                             .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
@@ -1121,7 +1123,7 @@ $('html').click(function(e) {
 
                         return value
 
-                          .replace(/[^0-9]/g, "")
+                          .replace(/[^0-9-.]/g, "")
 
                           .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
@@ -1201,7 +1203,7 @@ function add_click(){
 
         $('#vat_price_total').val("");
 
-
+        $('#vat_percent').val(10);
 
         $('#shipment_list').html("");
 
@@ -1288,6 +1290,8 @@ $(document).ready(function(){
                     var vat_date = $('#vat_date').attr('value');
 
                     var shipment_list = $('#shipment_list').val();
+
+                    var vat_percent = $('#vat_percent').val();
 
 
 
@@ -1376,6 +1380,8 @@ $(document).ready(function(){
                             vat_date: vat_date,
 
                             shipment_list: shipment_list,
+
+                            vat_percent: vat_percent,
 
                             vat_out: vat_out,
 
@@ -1513,7 +1519,46 @@ $(document).ready(function(){
 
       }); 
 
+   $('#vat_percent').keyup(function(){
+    var percent = parseFloat($(this).val())/100;
 
+    var total = 0;
+
+      $('.vat_out_total').each(function() { 
+
+        total += parseFloat($(this).val().replace(/\,/g, ""));
+
+        $('#vat_sum').val(Math.round(total*100)/100)
+
+        $('#vat_price').val(Math.round(total*percent*100)/100);
+
+        $('#vat_price_total').val(Math.round(total*100)/100+Math.round(total*percent*100)/100);
+
+    });
+
+      $('.numbers').val(function(index, value) {
+
+          return value
+
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+          ;
+
+        });
+
+
+
+      $('.vat_out_total:eq('+rowIndex+')').val(function(index, value) {
+
+          return value
+
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+          ;
+
+        });
+
+   });
 
    $('.vat_out_number').keyup(function(){
 
@@ -1533,25 +1578,26 @@ $(document).ready(function(){
 
           Math.round(
 
-          price*number
+          price*number*100
 
-          )
+          )/100
 
       );
 
 
 
       var total = 0;
+      var percent = parseFloat($('#vat_percent').val())/100;
 
       $('.vat_out_total').each(function() { 
 
         total += parseFloat($(this).val().replace(/\,/g, ""));
 
-        $('#vat_sum').val(total);
+        $('#vat_sum').val(Math.round(total*100)/100)
 
-        $('#vat_price').val(Math.round(total*0.1));
+        $('#vat_price').val(Math.round(total*percent*100)/100);
 
-        $('#vat_price_total').val(total+Math.round(total*0.1));
+        $('#vat_price_total').val(Math.round(total*100)/100+Math.round(total*percent*100)/100);
 
     });
 
@@ -1569,11 +1615,11 @@ $(document).ready(function(){
 
             total += parseFloat($(this).val().replace(/\,/g, ""));
 
-            $('#vat_sum').val(total);
+            $('#vat_sum').val(Math.round(total*100)/100)
 
-            $('#vat_price').val(Math.round(total*0.1));
+            $('#vat_price').val(Math.round(total*percent*100)/100);
 
-            $('#vat_price_total').val(total+Math.round(total*0.1));
+            $('#vat_price_total').val(Math.round(total*100)/100+Math.round(total*percent*100)/100);
 
         });
 
@@ -1595,8 +1641,6 @@ $(document).ready(function(){
 
           return value
 
-            .replace(/\D/g, "")
-
             .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
           ;
@@ -1608,8 +1652,6 @@ $(document).ready(function(){
       $('.vat_out_total:eq('+rowIndex+')').val(function(index, value) {
 
           return value
-
-            .replace(/\D/g, "")
 
             .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
@@ -1639,25 +1681,26 @@ $(document).ready(function(){
 
           Math.round(
 
-          price*number
+          price*number*100
 
-          )
+          )/100
 
       );
 
 
 
       var total = 0;
+      var percent = parseFloat($('#vat_percent').val())/100;
 
       $('.vat_out_total').each(function() { 
 
         total += parseFloat($(this).val().replace(/\,/g, ""));
 
-        $('#vat_sum').val(total);
+        $('#vat_sum').val(Math.round(total*100)/100)
 
-        $('#vat_price').val(Math.round(total*0.1));
+        $('#vat_price').val(Math.round(total*percent*100)/100);
 
-        $('#vat_price_total').val(total+Math.round(total*0.1));
+        $('#vat_price_total').val(Math.round(total*100)/100+Math.round(total*percent*100)/100);
 
     });
 
@@ -1675,11 +1718,11 @@ $(document).ready(function(){
 
             total += parseFloat($(this).val().replace(/\,/g, ""));
 
-            $('#vat_sum').val(total);
+            $('#vat_sum').val(Math.round(total*100)/100)
 
-            $('#vat_price').val(Math.round(total*0.1));
+            $('#vat_price').val(Math.round(total*percent*100)/100);
 
-            $('#vat_price_total').val(total+Math.round(total*0.1));
+            $('#vat_price_total').val(Math.round(total*100)/100+Math.round(total*percent*100)/100);
 
         });
 
@@ -1701,8 +1744,6 @@ $(document).ready(function(){
 
           return value
 
-            .replace(/\D/g, "")
-
             .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
           ;
@@ -1715,8 +1756,6 @@ $(document).ready(function(){
 
           return value
 
-            .replace(/\D/g, "")
-
             .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
           ;
@@ -1728,8 +1767,6 @@ $(document).ready(function(){
       $('.vat_out_total:eq('+rowIndex+')').val(function(index, value) {
 
           return value
-
-            .replace(/\D/g, "")
 
             .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
@@ -1785,7 +1822,7 @@ $(document).ready(function(){
 
         return value
 
-          .replace(/[^0-9]/g, "")
+          .replace(/[^0-9-.]/g, "")
 
           .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
@@ -2351,25 +2388,26 @@ function addRow(tableID){
 
           Math.round(
 
-          price*number
+          price*number*100
 
-          )
+          )/100
 
       );
 
 
 
       var total = 0;
+      var percent = parseFloat($('#vat_percent').val())/100;
 
       $('.vat_out_total').each(function() { 
 
         total += parseFloat($(this).val().replace(/\,/g, ""));
 
-        $('#vat_sum').val(total);
+        $('#vat_sum').val(Math.round(total*100)/100)
 
-        $('#vat_price').val(Math.round(total*0.1));
+        $('#vat_price').val(Math.round(total*percent*100)/100);
 
-        $('#vat_price_total').val(total+Math.round(total*0.1));
+        $('#vat_price_total').val(Math.round(total*100)/100+Math.round(total*percent*100)/100);
 
     });
 
@@ -2387,11 +2425,11 @@ function addRow(tableID){
 
             total += parseFloat($(this).val().replace(/\,/g, ""));
 
-            $('#vat_sum').val(total);
+            $('#vat_sum').val(Math.round(total*100)/100)
 
-            $('#vat_price').val(Math.round(total*0.1));
+            $('#vat_price').val(Math.round(total*percent*100)/100);
 
-            $('#vat_price_total').val(total+Math.round(total*0.1));
+            $('#vat_price_total').val(Math.round(total*100)/100+Math.round(total*percent*100)/100);
 
         });
 
@@ -2413,8 +2451,6 @@ function addRow(tableID){
 
           return value
 
-            .replace(/\D/g, "")
-
             .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
           ;
@@ -2426,8 +2462,6 @@ function addRow(tableID){
       $('.vat_out_total:eq('+rowIndex+')').val(function(index, value) {
 
           return value
-
-            .replace(/\D/g, "")
 
             .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
@@ -2457,25 +2491,26 @@ function addRow(tableID){
 
           Math.round(
 
-          price*number
+          price*number*100
 
-          )
+          )/100
 
       );
 
 
 
       var total = 0;
+      var percent = parseFloat($('#vat_percent').val())/100;
 
       $('.vat_out_total').each(function() { 
 
         total += parseFloat($(this).val().replace(/\,/g, ""));
 
-        $('#vat_sum').val(total);
+        $('#vat_sum').val(Math.round(total*100)/100)
 
-        $('#vat_price').val(Math.round(total*0.1));
+        $('#vat_price').val(Math.round(total*percent*100)/100);
 
-        $('#vat_price_total').val(total+Math.round(total*0.1));
+        $('#vat_price_total').val(Math.round(total*100)/100+Math.round(total*percent*100)/100);
 
     });
 
@@ -2493,11 +2528,11 @@ function addRow(tableID){
 
             total += parseFloat($(this).val().replace(/\,/g, ""));
 
-            $('#vat_sum').val(total);
+            $('#vat_sum').val(Math.round(total*100)/100)
 
-            $('#vat_price').val(Math.round(total*0.1));
+            $('#vat_price').val(Math.round(total*percent*100)/100);
 
-            $('#vat_price_total').val(total+Math.round(total*0.1));
+            $('#vat_price_total').val(Math.round(total*100)/100+Math.round(total*percent*100)/100);
 
         });
 
@@ -2519,8 +2554,6 @@ function addRow(tableID){
 
           return value
 
-            .replace(/\D/g, "")
-
             .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
           ;
@@ -2533,8 +2566,6 @@ function addRow(tableID){
 
           return value
 
-            .replace(/\D/g, "")
-
             .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
           ;
@@ -2546,8 +2577,6 @@ function addRow(tableID){
       $('.vat_out_total:eq('+rowIndex+')').val(function(index, value) {
 
           return value
-
-            .replace(/\D/g, "")
 
             .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
@@ -2611,7 +2640,7 @@ function addRow(tableID){
 
         return value
 
-          .replace(/[^0-9]/g, "")
+          .replace(/[^0-9-.]/g, "")
 
           .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
@@ -2734,24 +2763,23 @@ function deleteRow(tableID){
                     i--;
 
                     var total = 0;
+                    var percent = parseFloat($('#vat_percent').val())/100;
 
                     $('.vat_out_total').each(function() { 
 
                       total += parseFloat($(this).val().replace(/\,/g, ""));
 
-                      $('#vat_sum').val(total);
+                      $('#vat_sum').val(Math.round(total*100)/100)
 
-                      $('#vat_price').val(Math.round(total*0.1));
+                      $('#vat_price').val(Math.round(total*percent*100)/100);
 
-                      $('#vat_price_total').val(total+Math.round(total*0.1));
+                      $('#vat_price_total').val(Math.round(total*100)/100+Math.round(total*percent*100)/100);
 
                   });
 
                     $('.numbers').val(function(index, value) {
 
                       return value
-
-                        .replace(/\D/g, "")
 
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 

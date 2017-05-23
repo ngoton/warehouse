@@ -1,0 +1,56 @@
+<div>
+  <table class="table_data" id="tblExport2">
+    <?php foreach ($sell_lists as $sell_list) { ?>
+    <tr>
+      <th colspan="4" class="fix">Sản phẩm: <?php echo $sell_list->product_code ?></th>
+    </tr>
+    <tr style="background: #f5fafd; color: #21759b;">
+      <td class="fix">STT</td>
+      <td class="fix">Vật tư</td>
+      <td class="fix">Khối lượng</td>
+      <td class="fix">ĐVT</td>
+    </tr>
+    <?php $i=1; $tong=0;
+       foreach ($sell_list_data[$sell_list->sell_list_id] as $sell) { 
+        $tong += $sell->spare_part_number;
+    ?>
+      <tr>
+        <td class="fix"><?php echo $i++ ?></td>
+        <td class="fix"><?php echo $sell->spare_part_name ?></td>
+        <td class="fix"><?php echo $sell->spare_part_number ?></td>
+        <td class="fix"><?php echo $sell->spare_part_unit ?></td>
+      </tr>
+      <?php } ?>
+      <tr style="font-weight:bold">
+        <td colspan="2" class="fix">Tổng cộng</td>
+        <td class="fix"><?php echo $tong ?></td>
+        <td class="fix"></td>
+      </tr>
+      <tr style="background: #f5fafd; color: #21759b;">
+        <td colspan="4" class="fix"></td>
+      </tr>
+    <?php } ?>
+  </table>
+</div>
+
+<div style="margin-top:20px">
+  <div class="add-box"><a class="add_button" id="btnExport2" ><i class="fa fa-download"></i> Xuất</a></div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function () {
+
+    $("#btnExport2").click(function () {
+
+        $("#tblExport2").battatech_excelexport({
+
+            containerid: "tblExport2"
+
+           , datatype: 'table'
+
+        });
+
+    });
+
+});
+</script>
