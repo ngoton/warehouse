@@ -158,13 +158,13 @@ elseif ($order_by == 'spare_part_name')
             <td class="fix"><?php echo $i++; ?></td>
             <td class="fix"  id="spare_part_name_<?php echo $spare_part->spare_part_id; ?>"><a target="_blank" href="<?php echo $this->url('sparepart/index/'.$spare_part->spare_part_id) ?>" ><?php echo $spare_part->spare_part_name ?></a></td>
             <td class="fix" ><?php echo $donvi ?></td>
-            <td class="fix" ><?php echo $tondau ?></td>
+            <td class="fix" ><?php echo $lib->formatMoney($tondau) ?></td>
             <td class="fix" ><?php echo $lib->formatMoney($tondau>0?$thanhtien_dau:null) ?></td>
-            <td class="fix" ><?php echo $nhap ?></td>
+            <td class="fix" ><?php echo $lib->formatMoney($nhap) ?></td>
             <td class="fix" ><?php echo $lib->formatMoney($thanhtien_nhap) ?></td>
-            <td class="fix" ><?php echo $xuat ?></td>
+            <td class="fix" ><?php echo $lib->formatMoney($xuat) ?></td>
             <td class="fix" ><?php echo $lib->formatMoney($thanhtien_xuat) ?></td>
-            <td class="fix" ><?php echo $toncuoi ?></td>
+            <td class="fix" ><?php echo $lib->formatMoney($toncuoi) ?></td>
             <td class="fix" ><?php echo $lib->formatMoney($thanhtien_cuoi) ?></td>
         </tr>
     <?php endforeach; ?>

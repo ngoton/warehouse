@@ -1973,7 +1973,7 @@ Class importstockController Extends baseController {
 
 
 
-                $str .= '<td><input style="width:120px" type="text" class="cost numbers" name="cost[]"><input type="checkbox" class="check_vat" name="check_vat[]" value="1"> VAT</td></tr>';
+                $str .= '<td><input style="width:120px" type="text" class="cost number" name="cost[]"><input type="checkbox" class="check_vat" name="check_vat[]" value="1"> VAT</td></tr>';
 
 
 
@@ -2069,7 +2069,7 @@ Class importstockController Extends baseController {
 
 
 
-                    $str .= '<td><input style="width:120px" type="text" class="cost numbers" name="cost[]" value="'.$this->lib->formatMoney($v->cost).'" ><input '.$checked.' type="checkbox" class="check_vat" name="check_vat[]" value="1"> VAT</td></tr>';
+                    $str .= '<td><input style="width:120px" type="text" class="cost number" name="cost[]" value="'.$this->lib->formatMoney($v->cost).'" ><input '.$checked.' type="checkbox" class="check_vat" name="check_vat[]" value="1"> VAT</td></tr>';
 
 
 

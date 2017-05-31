@@ -146,9 +146,15 @@ Class stockController Extends baseController {
             );
             $stock_exs = $spare_stock_model->getAllStock($data_ex,$join_ex);
             foreach ($stock_exs as $ex) {
-                $data_stock[$spare->spare_part_id]['dauki']['number'] = isset($data_stock[$spare->spare_part_id]['dauki']['number'])?$data_stock[$spare->spare_part_id]['dauki']['number']-$ex->spare_stock_number:(0-$ex->spare_stock_number);
-                $data_stock[$spare->spare_part_id]['dauki']['price'] = isset($data_stock[$spare->spare_part_id]['dauki']['price'])?$data_stock[$spare->spare_part_id]['dauki']['price']-($ex->spare_stock_number*$ex->spare_stock_price):0-($ex->spare_stock_number*$ex->spare_stock_price);
+                $data_stock[$spare->spare_part_id]['dauki_xuat']['number'] = isset($data_stock[$spare->spare_part_id]['dauki_xuat']['number'])?$data_stock[$spare->spare_part_id]['dauki_xuat']['number']+$ex->spare_stock_number:$ex->spare_stock_number;
+                $data_stock[$spare->spare_part_id]['dauki_xuat']['price'] = isset($data_stock[$spare->spare_part_id]['dauki_xuat']['price'])?$data_stock[$spare->spare_part_id]['dauki_xuat']['price']+($ex->spare_stock_number*$ex->spare_stock_price):$ex->spare_stock_number*$ex->spare_stock_price;
             }
+
+            if (isset($data_stock[$spare->spare_part_id]['dauki_xuat']['number'])) {
+                $data_stock[$spare->spare_part_id]['dauki']['number'] = $data_stock[$spare->spare_part_id]['dauki']['number']-$data_stock[$spare->spare_part_id]['dauki_xuat']['number'];
+                $data_stock[$spare->spare_part_id]['dauki']['price'] = $data_stock[$spare->spare_part_id]['dauki']['price']-$data_stock[$spare->spare_part_id]['dauki_xuat']['price'];
+            }
+            
 
         }
         
