@@ -1377,6 +1377,7 @@ $( document ).ajaxStart(function() {
   $("#ajax_loader").fadeIn(200);
 
   $('input[type="submit"]').attr('disabled',true);
+  $('button[type="submit"]').attr('disabled',true);
 
 });
 
@@ -1385,6 +1386,7 @@ $( document ).ajaxComplete(function() {
   $("#ajax_loader").fadeOut(200);
 
   $('input[type="submit"]').attr('disabled',false);
+  $('button[type="submit"]').attr('disabled',false);
 
 });
 
