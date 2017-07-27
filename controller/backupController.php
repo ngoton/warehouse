@@ -160,7 +160,7 @@ Class backupController Extends baseController {
         //now run the DBox app info and set the client;
 
         $appInfo = dbx\AppInfo::loadFromJsonFile("config.json");
-        $dbxClient = new dbx\Client($accessToken, "TMS_SQL_Backup");
+        $dbxClient = new dbx\Client($accessToken, "WH_SQL_Backup");
 
 
         //now the main handling of the zipped file upload;
@@ -168,7 +168,7 @@ Class backupController Extends baseController {
         //echo("Uploading $backupFilename to Dropbox\n");
         try {
                 $f = fopen($backupFile, "rb");
-                $result = $dbxClient->uploadFile('/TMS_SQL_Backup/'.$backupFilename, dbx\WriteMode::force(), $f);
+                $result = $dbxClient->uploadFile('/WH_SQL_Backup/'.$backupFilename, dbx\WriteMode::force(), $f);
                 fclose($f);
         } catch (Exception $e) {
             $errors = "Failed to upload CRM DB Backup to Dropbox: " . $e->getMessage() . "\n";
