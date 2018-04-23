@@ -112,9 +112,10 @@ Class stockController Extends baseController {
             );
             $stock_ims = $spare_stock_model->getAllStock($data_im,$join_im);
             foreach ($stock_ims as $im) {
+                $num = round($im->spare_stock_number,2);
                 $data_stock[$spare->spare_part_id]['import']['unit'] = $im->spare_stock_unit;
-                $data_stock[$spare->spare_part_id]['import']['number'] = isset($data_stock[$spare->spare_part_id]['import']['number'])?$data_stock[$spare->spare_part_id]['import']['number']+$im->spare_stock_number:$im->spare_stock_number;
-                $data_stock[$spare->spare_part_id]['import']['price'] = isset($data_stock[$spare->spare_part_id]['import']['price'])?$data_stock[$spare->spare_part_id]['import']['price']+($im->spare_stock_number*$im->spare_stock_price):($im->spare_stock_number*$im->spare_stock_price);
+                $data_stock[$spare->spare_part_id]['import']['number'] = round(isset($data_stock[$spare->spare_part_id]['import']['number'])?$data_stock[$spare->spare_part_id]['import']['number']+$num:$num,2);
+                $data_stock[$spare->spare_part_id]['import']['price'] = round(isset($data_stock[$spare->spare_part_id]['import']['price'])?$data_stock[$spare->spare_part_id]['import']['price']+($num*$im->spare_stock_price):($num*$im->spare_stock_price),2);
             }
 
             $join_ex = array('table'=>'sell_list, sell','where'=>'sell_list = sell_list_id AND sell = sell_id');
@@ -123,9 +124,10 @@ Class stockController Extends baseController {
             );
             $stock_exs = $spare_stock_model->getAllStock($data_ex,$join_ex);
             foreach ($stock_exs as $ex) {
+                $num = round($ex->spare_stock_number,2);
                 $data_stock[$spare->spare_part_id]['export']['unit'] = $ex->spare_stock_unit;
-                $data_stock[$spare->spare_part_id]['export']['number'] = isset($data_stock[$spare->spare_part_id]['export']['number'])?$data_stock[$spare->spare_part_id]['export']['number']+$ex->spare_stock_number:$ex->spare_stock_number;
-                $data_stock[$spare->spare_part_id]['export']['price'] = isset($data_stock[$spare->spare_part_id]['export']['price'])?$data_stock[$spare->spare_part_id]['export']['price']+($ex->spare_stock_number*$ex->spare_stock_price):($ex->spare_stock_number*$ex->spare_stock_price);
+                $data_stock[$spare->spare_part_id]['export']['number'] = round(isset($data_stock[$spare->spare_part_id]['export']['number'])?$data_stock[$spare->spare_part_id]['export']['number']+$num:$num,2);
+                $data_stock[$spare->spare_part_id]['export']['price'] = round(isset($data_stock[$spare->spare_part_id]['export']['price'])?$data_stock[$spare->spare_part_id]['export']['price']+($num*$ex->spare_stock_price):($num*$ex->spare_stock_price),2);
             }
 
             ////
@@ -135,9 +137,10 @@ Class stockController Extends baseController {
             );
             $stock_ims = $spare_stock_model->getAllStock($data_im,$join_im);
             foreach ($stock_ims as $im) {
+                $num = round($im->spare_stock_number,2);
                 $data_stock[$spare->spare_part_id]['dauki']['unit'] = $im->spare_stock_unit;
-                $data_stock[$spare->spare_part_id]['dauki']['number'] = isset($data_stock[$spare->spare_part_id]['dauki']['number'])?$data_stock[$spare->spare_part_id]['dauki']['number']+$im->spare_stock_number:$im->spare_stock_number;
-                $data_stock[$spare->spare_part_id]['dauki']['price'] = isset($data_stock[$spare->spare_part_id]['dauki']['price'])?$data_stock[$spare->spare_part_id]['dauki']['price']+($im->spare_stock_number*$im->spare_stock_price):($im->spare_stock_number*$im->spare_stock_price);
+                $data_stock[$spare->spare_part_id]['dauki']['number'] = round(isset($data_stock[$spare->spare_part_id]['dauki']['number'])?$data_stock[$spare->spare_part_id]['dauki']['number']+$num:$num,2);
+                $data_stock[$spare->spare_part_id]['dauki']['price'] = round(isset($data_stock[$spare->spare_part_id]['dauki']['price'])?$data_stock[$spare->spare_part_id]['dauki']['price']+($num*$im->spare_stock_price):($num*$im->spare_stock_price),2);
             }
 
             $join_ex = array('table'=>'sell_list, sell','where'=>'sell_list = sell_list_id AND sell = sell_id');
@@ -146,13 +149,14 @@ Class stockController Extends baseController {
             );
             $stock_exs = $spare_stock_model->getAllStock($data_ex,$join_ex);
             foreach ($stock_exs as $ex) {
-                $data_stock[$spare->spare_part_id]['dauki_xuat']['number'] = isset($data_stock[$spare->spare_part_id]['dauki_xuat']['number'])?$data_stock[$spare->spare_part_id]['dauki_xuat']['number']+$ex->spare_stock_number:$ex->spare_stock_number;
-                $data_stock[$spare->spare_part_id]['dauki_xuat']['price'] = isset($data_stock[$spare->spare_part_id]['dauki_xuat']['price'])?$data_stock[$spare->spare_part_id]['dauki_xuat']['price']+($ex->spare_stock_number*$ex->spare_stock_price):$ex->spare_stock_number*$ex->spare_stock_price;
+                $num = round($ex->spare_stock_number,2);
+                $data_stock[$spare->spare_part_id]['dauki_xuat']['number'] = round(isset($data_stock[$spare->spare_part_id]['dauki_xuat']['number'])?$data_stock[$spare->spare_part_id]['dauki_xuat']['number']+$num:$num,2);
+                $data_stock[$spare->spare_part_id]['dauki_xuat']['price'] = round(isset($data_stock[$spare->spare_part_id]['dauki_xuat']['price'])?$data_stock[$spare->spare_part_id]['dauki_xuat']['price']+($num*$ex->spare_stock_price):$num*$ex->spare_stock_price,2);
             }
 
             if (isset($data_stock[$spare->spare_part_id]['dauki_xuat']['number'])) {
-                $data_stock[$spare->spare_part_id]['dauki']['number'] = $data_stock[$spare->spare_part_id]['dauki']['number']-$data_stock[$spare->spare_part_id]['dauki_xuat']['number'];
-                $data_stock[$spare->spare_part_id]['dauki']['price'] = $data_stock[$spare->spare_part_id]['dauki']['price']-$data_stock[$spare->spare_part_id]['dauki_xuat']['price'];
+                $data_stock[$spare->spare_part_id]['dauki']['number'] = round($data_stock[$spare->spare_part_id]['dauki']['number']-$data_stock[$spare->spare_part_id]['dauki_xuat']['number'],2);
+                $data_stock[$spare->spare_part_id]['dauki']['price'] = round($data_stock[$spare->spare_part_id]['dauki']['price']-$data_stock[$spare->spare_part_id]['dauki_xuat']['price'],2);
             }
             
 
