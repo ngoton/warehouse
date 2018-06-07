@@ -168,6 +168,9 @@ elseif ($order_by == 'customer_name')
               <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','sell_number','<?php echo $url_order ?>')">Số lượng <?php if ($order_by == 'sell_number'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
           </th>
           <th  class="fix">
+              <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','sell_number','<?php echo $url_order ?>')">Đơn giá <?php if ($order_by == 'sell_number'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+          </th>
+          <th  class="fix">
               <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','sell_money','<?php echo $url_order ?>')">Thành tiền <?php if ($order_by == 'sell_money'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
           </th>
              
@@ -192,6 +195,7 @@ elseif ($order_by == 'customer_name')
               <td class="fix"  id="sell_customer_<?php echo $sell->sell_id; ?>" data="<?php echo $sell->sell_customer ?>"><?php echo $sell->customer_name ?></td>
               <td class="fix"  id="sell_comment_<?php echo $sell->sell_id; ?>"><?php echo $sell->sell_comment ?></td>
               <td class="fix"  id="sell_number_<?php echo $sell->sell_id; ?>"><?php echo $sell->sell_number ?></td>
+              <td class="fix"  id="dg_<?php echo $sell->sell_id; ?>"><?php echo $lib->formatMoney($sell->sell_money/$sell->sell_number,3) ?></td>
               <td class="fix"  id="sell_money_<?php echo $sell->sell_id; ?>"><?php echo $lib->formatMoney($sell->sell_money) ?></td>
               
               <?php if(!isset($disable_control)){ ?>
@@ -209,7 +213,9 @@ elseif ($order_by == 'customer_name')
                 Tổng cộng
             </th>
             <td class="fix" ><?php echo $lib->formatMoney($tong) ?></td>
+            <td class="fix" ></td>
             <td class="fix" ><?php echo $lib->formatMoney($tongtien) ?></td>
+            <td class="fix" ></td>
         </tr>
      </tbody>
   </table>

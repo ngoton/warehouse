@@ -425,7 +425,20 @@ Class exvatController Extends baseController {
         $vats = $vat_model->getAllVAT($data,$join);
 
 
+        $vat_out_model = $this->model->get('vatoutModel');
+         $vat_data = array();
 
+         foreach ($vats as $vat) {
+             $vs = $vat_out_model->getVATByWhere(array('vat'=>$vat->vat_id));
+             if ($vs) {
+                $vat_data[$vat->vat_id]['comment'] = $vs->vat_out_comment;
+                 $vat_data[$vat->vat_id]['sl'] = $vs->vat_out_number;
+                 $vat_data[$vat->vat_id]['dg'] = $vs->vat_out_price;
+             }
+             
+         }
+
+        $this->view->data['vat_data'] = $vat_data;
         
 
         $this->view->data['vats'] = $vats;

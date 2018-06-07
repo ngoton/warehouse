@@ -446,9 +446,26 @@ Class receiptvoucherController Extends baseController {
         $receipts = $receipt_model->getAllReceipt($data,$join);
 
 
+        $debit_pay_model = $this->model->get('debitpayModel');
+        $debit_model = $this->model->get('debitModel');
+        $vat_model = $this->model->get('vatModel');
+        $shipment_list_model = $this->model->get('shipmentlistModel');
 
+        $receipt_data = array();
+        foreach ($receipts as $receipt) {
+            $pay = $debit_pay_model->getDebitByWhere(array('receipt_voucher'=>$receipt->receipt_voucher_id));
+            $debit = $debit_model->getDebit($pay->debit);
+            if ($debit) {
+                $vat = $vat_model->getVAT($debit->vat);
+                $shipment = $shipment_list_model->getShipment($vat->shipment_list);
+            }
+            
+
+            $receipt_data[$receipt->receipt_voucher_id]['vat'] = $vat->vat_number;
+            $receipt_data[$receipt->receipt_voucher_id]['shipment'] = $shipment->shipment_list_number;
+        }
         
-
+        $this->view->data['receipt_data'] = $receipt_data;
         $this->view->data['receipts'] = $receipts;
 
 

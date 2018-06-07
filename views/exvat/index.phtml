@@ -264,6 +264,36 @@ elseif ($order_by == 'customer_name')
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','customer_name','<?php echo $url_order ?>')">Khách hàng <?php if ($order_by == 'customer_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
 
         </th>
+        <th  class="fix">
+
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','vat_sum','<?php echo $url_order ?>')">Tên hàng <?php if ($order_by == 'vat_sum'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+
+        </th>
+        <th  class="fix">
+
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','vat_sum','<?php echo $url_order ?>')">Số lượng <?php if ($order_by == 'vat_sum'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+
+        </th>
+        <th  class="fix">
+
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','vat_sum','<?php echo $url_order ?>')">Đơn giá <?php if ($order_by == 'vat_sum'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+
+        </th>
+        <th  class="fix">
+
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','vat_sum','<?php echo $url_order ?>')">Tổng tiền hàng <?php if ($order_by == 'vat_sum'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+
+        </th>
+        <th  class="fix">
+
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','vat_percent','<?php echo $url_order ?>')">Tiền thuế <?php if ($order_by == 'vat_percent'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+
+        </th>
+        <th  class="fix">
+
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','vat_price','<?php echo $url_order ?>')">Tổng cộng <?php if ($order_by == 'vat_price'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+
+        </th>
 
         <?php if(!isset($disable_control)){ ?>
 
@@ -298,6 +328,18 @@ elseif ($order_by == 'customer_name')
             <td class="fix" id="vat_number_<?php echo $vat->vat_id; ?>"><?php echo $vat->vat_number; ?></td>
 
             <td class="fix" data="<?php echo $vat->customer; ?>" id="customer_<?php echo $vat->vat_id; ?>"><?php echo $vat->customer_name; ?></td>
+
+            <td class="fix" id="ten_<?php echo $vat->vat_id; ?>"><?php echo isset($vat_data[$vat->vat_id]['comment'])?$vat_data[$vat->vat_id]['comment']:null; ?></td>
+
+            <td class="fix" id="sl_<?php echo $vat->vat_id; ?>"><?php echo isset($vat_data[$vat->vat_id]['sl'])?$vat_data[$vat->vat_id]['sl']:null; ?></td>
+
+            <td class="fix" id="dg_<?php echo $vat->vat_id; ?>"><?php echo $lib->formatMoney(isset($vat_data[$vat->vat_id]['dg'])?$vat_data[$vat->vat_id]['dg']:null); ?></td>
+
+            <td class="fix" id="vat_sum_<?php echo $vat->vat_id; ?>"><?php echo $lib->formatMoney($vat->vat_sum); ?></td>
+
+            <td class="fix" id="vat_price_<?php echo $vat->vat_id; ?>"><?php echo $lib->formatMoney($vat->vat_price); ?></td>
+
+            <td class="fix" id="vat_<?php echo $vat->vat_id; ?>"><?php echo $lib->formatMoney($vat->vat_sum+$vat->vat_price); ?></td>
 
             <td class="fix" style="display:none" id="payment_<?php echo $vat->vat_id; ?>"><?php echo $vat->payment; ?></td>
 

@@ -94,7 +94,7 @@ elseif ($order_by == 'import_stock_price')
 
 </div>
 
-<table class="table_data" id="tblExport<?php echo $house->house_id ?>">
+<table class="table_data" id="tblExport">
   <thead>
       <tr>
           <th class="fix"><input type="checkbox" onclick="checkall('checkbox', this)" name="checkall"/></th>
@@ -106,6 +106,12 @@ elseif ($order_by == 'import_stock_price')
           </th>
           <th  class="fix">
               <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','invoice_number','<?php echo $url_order ?>')">Số hóa đơn <?php if ($order_by == 'invoice_number'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+          </th>
+          <th  class="fix">
+              <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','invoice_customer','<?php echo $url_order ?>')">Nhà cung cấp <?php if ($order_by == 'invoice_customer'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+          </th>
+          <th  class="fix">
+              <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','import_stock_total','<?php echo $url_order ?>')">Tên hàng <?php if ($order_by == 'import_stock_total'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
           </th>
           <th  class="fix">
               <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','import_stock_total','<?php echo $url_order ?>')">Số lượng <?php if ($order_by == 'import_stock_total'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
@@ -122,19 +128,22 @@ elseif ($order_by == 'import_stock_price')
       
      </thead>
      <tbody>
-      <?php $tong = 0;
+      <?php $tong = 0; $tonggt = 0;
       foreach ($imports as $import_stock) : 
         $tong += $import_stock->import_stock_total;
+        $tonggt += $import_stock->import_stock_price;
         ?>
           <tr onClick="HighLightTR(this,'#4d90fe','cc3333');" id="<?php echo $import_stock->import_stock_id ?>" class="edit_tr">
               <td><input name="check[]" type="checkbox" class="checkbox" value="<?php echo $import_stock->import_stock_id ?>"></td>
               <td class="fix"><?php echo $i++; ?></td>
               <td class="fix" id="import_stock_date_<?php echo $import_stock->import_stock_id; ?>"><?php echo $lib->hien_thi_ngay_thang($import_stock->import_stock_date) ?></td>
               <td class="fix"  id="invoice_number_<?php echo $import_stock->import_stock_id; ?>"><?php echo $import_stock->invoice_number ?></td>
+              <td class="fix" data="<?php echo $import_stock->invoice_customer ?>" id="invoice_customer_<?php echo $import_stock->import_stock_id; ?>"><?php echo isset($customer_data['customer_id'][$import_stock->invoice_customer])?$customer_data['customer_name'][$import_stock->invoice_customer]:null ?></td>
+              <td class="fix" id="spare_<?php echo $import_stock->import_stock_id; ?>"><?php echo isset($import_data[$import_stock->import_stock_id]['spare'])?$import_data[$import_stock->import_stock_id]['spare']:null ?></td>
               <td class="fix"  id="import_stock_total_<?php echo $import_stock->import_stock_id; ?>"><?php echo $import_stock->import_stock_total ?></td>
               <td class="fix"  id="import_stock_price_<?php echo $import_stock->import_stock_id; ?>"><?php echo $lib->formatMoney($import_stock->import_stock_price) ?></td>
               <td class="fix" style="display:none" id="invoice_date_<?php echo $import_stock->import_stock_id; ?>"><?php echo $import_stock->invoice_date>0?$lib->hien_thi_ngay_thang($import_stock->invoice_date):null ?></td>
-              <td class="fix" style="display:none" data="<?php echo $import_stock->invoice_customer ?>" id="invoice_customer_<?php echo $import_stock->import_stock_id; ?>"><?php echo isset($customer_data['customer_id'][$import_stock->invoice_customer])?$customer_data['customer_name'][$import_stock->invoice_customer]:null ?></td>
+              
               <?php if(!isset($disable_control)){ ?>
               <td class="pull-right">
                   <button class="btn btn-sm btn-flat btn-primary"><i class="fa fa-edit"></i> Sửa</button>
@@ -145,10 +154,12 @@ elseif ($order_by == 'import_stock_price')
       <?php endforeach; ?>
         <tr  style="font-weight: bold; color: rgb(23, 119, 226);" >
             
-            <th colspan="4" style="border-right: 1px solid rgb(236, 235, 235);border-top: 1px solid #80C8E5;padding: 7px; text-align: right;" >
+            <th colspan="6" style="border-right: 1px solid rgb(236, 235, 235);border-top: 1px solid #80C8E5;padding: 7px; text-align: right;" >
                 Tổng cộng
             </th>
             <td class="fix" ><?php echo $lib->formatMoney($tong) ?></td>
+            <td class="fix" ><?php echo $lib->formatMoney($tonggt) ?></td>
+            <td class="fix" ></td>
         </tr>
      </tbody>
   </table>

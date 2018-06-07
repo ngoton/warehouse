@@ -258,6 +258,18 @@ elseif ($order_by == 'customer_name')
 
         <th  class="fix">
 
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','start_time','<?php echo $url_order ?>')">Từ ngày <?php if ($order_by == 'start_time'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+
+        </th>
+
+        <th  class="fix">
+
+            <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','end_time','<?php echo $url_order ?>')">Đến ngày <?php if ($order_by == 'end_time'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
+
+        </th>
+
+        <th  class="fix">
+
             <a class="sort <?php echo $order ?>" onclick="sapxep('<?php echo $page ?>','customer_name','<?php echo $url_order ?>')">Khách hàng <?php if ($order_by == 'customer_name'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
 
         </th>
@@ -299,13 +311,13 @@ elseif ($order_by == 'customer_name')
             <td class="fix" id="shipment_list_date_<?php echo $shipment_list->shipment_list_id; ?>"><?php echo $lib->hien_thi_ngay_thang($shipment_list->shipment_list_date); ?></td>
 
             <td class="fix" id="shipment_list_number_<?php echo $shipment_list->shipment_list_id; ?>"><?php echo $shipment_list->shipment_list_number; ?></td>
-
+            <td class="fix" id="start_time_<?php echo $shipment_list->shipment_list_id; ?>"><?php echo $lib->hien_thi_ngay_thang($shipment_list->start_time); ?></td>
+            <td class="fix" id="end_time_<?php echo $shipment_list->shipment_list_id; ?>"><?php echo $lib->hien_thi_ngay_thang($shipment_list->end_time); ?></td>
             <td class="fix" data="<?php echo $shipment_list->customer; ?>" id="customer_<?php echo $shipment_list->shipment_list_id; ?>"><?php echo $shipment_list->customer_name; ?></td>
 
             <td class="fix" id="shipment_list_price_<?php echo $shipment_list->shipment_list_id; ?>"><?php echo $lib->formatMoney($shipment_list->shipment_list_price); ?></td>
 
-            <td class="fix" style="display:none" id="start_time_<?php echo $shipment_list->shipment_list_id; ?>"><?php echo $lib->hien_thi_ngay_thang($shipment_list->start_time); ?></td>
-            <td class="fix" style="display:none" id="end_time_<?php echo $shipment_list->shipment_list_id; ?>"><?php echo $lib->hien_thi_ngay_thang($shipment_list->end_time); ?></td>
+            
             <td class="fix" style="display:none" id="shipment_<?php echo $shipment_list->shipment_list_id; ?>"><?php echo $shipment_list->shipment; ?></td>
 
             <?php if(!isset($disable_control)){ ?>

@@ -168,7 +168,17 @@ Class importstockController Extends baseController {
 
          $imports = $import_model->getAllStock($data);
 
-        
+         $spare_model = $this->model->get('sparestockModel');
+         $spare_part_model = $this->model->get('sparepartModel');
+         $import_data = array();
+
+         foreach ($imports as $import) {
+             $stocks = $spare_model->getStockByWhere(array('import_stock'=>$import->import_stock_id));
+
+             $import_data[$import->import_stock_id]['spare'] = $spare_part_model->getStock($stocks->spare_part)->spare_part_name;
+         }
+
+        $this->view->data['import_data'] = $import_data;
         $this->view->data['imports'] = $imports;
         
 
