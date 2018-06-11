@@ -1340,6 +1340,8 @@ Class importstockController Extends baseController {
 
                         'spare_stock_price' => trim(str_replace(',','',$v['spare_stock_price'])),
 
+                        'spare_stock_total' => trim(str_replace(',','',$v['spare_stock_total'])),
+
                         'spare_stock_unit' => $v['spare_stock_unit'],
 
                         
@@ -1779,7 +1781,7 @@ Class importstockController Extends baseController {
 
                 $str .= '<td>Đơn giá <br> <input style="width:100px" type="text" class="spare_stock_price number" name="spare_stock_price[]"></td></tr>';
 
-
+                $str .= '<td>Thành tiền <br> <input style="width:100px" type="text" class="spare_stock_total number" name="spare_stock_total[]"></td></tr>';
 
                 $str .= '</table></td></tr>';
 
@@ -1822,6 +1824,7 @@ Class importstockController Extends baseController {
 
                     $str .= '<td>Đơn giá <br> <input style="width:100px" type="text" class="spare_stock_price number" name="spare_stock_price[]" value="'.$code->spare_stock_price.'"></td></tr>';
 
+                    $str .= '<td>Thành tiền <br> <input style="width:100px" type="text" class="spare_stock_total number" name="spare_stock_total[]" value="'.$code->spare_stock_total.'"></td></tr>';
 
 
                     $str .= '</table></td></tr>';

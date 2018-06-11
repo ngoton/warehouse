@@ -267,6 +267,10 @@ $this->helper('slidePaginator');
                                                   Đơn giá <br>
                                                     <input style="width:100px" type="text" class="spare_stock_price number" name="spare_stock_price[]" tabindex="5" >
                                                 </td>
+                                                <td>
+                                                  Thành tiền <br>
+                                                    <input style="width:100px" type="text" class="spare_stock_total number" name="spare_stock_total[]" tabindex="6" >
+                                                </td>
                                             </tr>
                                             
                                         </table>
@@ -448,7 +452,36 @@ $('html').click(function(e) {
                             
                       }); 
 
-                
+                $('.spare_stock_number').keyup(function(){
+                    var row = $(this).parent().parent().parent().parent().parent().parent();
+                    var rowIndex = row[0].rowIndex;
+
+                    var sl = parseFloat(get_number('.spare_stock_number:eq('+rowIndex+')') || 0);
+                    var dg = parseFloat(get_number('.spare_stock_price:eq('+rowIndex+')') || 0);
+                    var tt = sl*dg;
+                    $('.spare_stock_total:eq('+rowIndex+')').val(tt.toFixed(4));
+                    
+                });
+                $('.spare_stock_price').keyup(function(){
+                    var row = $(this).parent().parent().parent().parent().parent().parent();
+                    var rowIndex = row[0].rowIndex;
+
+                    var sl = parseFloat(get_number('.spare_stock_number:eq('+rowIndex+')') || 0);
+                    var dg = parseFloat(get_number('.spare_stock_price:eq('+rowIndex+')') || 0);
+                    var tt = sl*dg;
+                    $('.spare_stock_total:eq('+rowIndex+')').val(tt.toFixed(4));
+                    
+                });
+                $('.spare_stock_total').keyup(function(){
+                    var row = $(this).parent().parent().parent().parent().parent().parent();
+                    var rowIndex = row[0].rowIndex;
+
+                    var sl = parseFloat(get_number('.spare_stock_number:eq('+rowIndex+')') || 0);
+                    var tt = parseFloat(get_number('.spare_stock_total:eq('+rowIndex+')') || 0);
+                    var dg = tt/sl;
+                    $('.spare_stock_price:eq('+rowIndex+')').val(dg.toFixed(4));
+                    
+                });
                    
                     $('.number').keyup(function(event) {
 
@@ -674,6 +707,7 @@ $(document).ready(function(){
                     var spare_stock_number = [];
                     var spare_stock_price = [];
                     var spare_stock_unit = [];
+                    var spare_stock_total = [];
 
                     $('.spare_stock_number').each(function() { 
                         spare_stock_number.push($(this).val());
@@ -687,6 +721,10 @@ $(document).ready(function(){
                         spare_stock_unit.push($(this).val());
                     });
 
+                    $('.spare_stock_total').each(function() { 
+                        spare_stock_total.push($(this).val());
+                    });
+
                     $('.spare_part').each(function(index) { 
                       spare_part_name.push($(this).val());
                       spare_part_id.push($(this).attr('data'));
@@ -695,7 +733,7 @@ $(document).ready(function(){
 
 
                     for (var i = 0; i < spare_part_name.length; i++) {
-                        spare_part.push({'spare_part_name':spare_part_name[i], 'spare_part_id':spare_part_id[i], 'spare_stock_number':spare_stock_number[i], 'spare_stock_price':spare_stock_price[i], 'spare_stock_unit':spare_stock_unit[i]});
+                        spare_part.push({'spare_part_name':spare_part_name[i], 'spare_part_id':spare_part_id[i], 'spare_stock_number':spare_stock_number[i], 'spare_stock_price':spare_stock_price[i], 'spare_stock_unit':spare_stock_unit[i], 'spare_stock_total':spare_stock_total[i]});
                         
                         
                     };
@@ -920,6 +958,37 @@ $('.receiver').keyup(function(){
         }
             
       });
+
+    $('.spare_stock_number').keyup(function(){
+        var row = $(this).parent().parent().parent().parent().parent().parent();
+        var rowIndex = row[0].rowIndex;
+
+        var sl = parseFloat(get_number('.spare_stock_number:eq('+rowIndex+')') || 0);
+        var dg = parseFloat(get_number('.spare_stock_price:eq('+rowIndex+')') || 0);
+        var tt = sl*dg;
+        $('.spare_stock_total:eq('+rowIndex+')').val(tt.toFixed(4));
+        
+    });
+    $('.spare_stock_price').keyup(function(){
+        var row = $(this).parent().parent().parent().parent().parent().parent();
+        var rowIndex = row[0].rowIndex;
+
+        var sl = parseFloat(get_number('.spare_stock_number:eq('+rowIndex+')') || 0);
+        var dg = parseFloat(get_number('.spare_stock_price:eq('+rowIndex+')') || 0);
+        var tt = sl*dg;
+        $('.spare_stock_total:eq('+rowIndex+')').val(tt.toFixed(4));
+        
+    });
+    $('.spare_stock_total').keyup(function(){
+        var row = $(this).parent().parent().parent().parent().parent().parent();
+        var rowIndex = row[0].rowIndex;
+
+        var sl = parseFloat(get_number('.spare_stock_number:eq('+rowIndex+')') || 0);
+        var tt = parseFloat(get_number('.spare_stock_total:eq('+rowIndex+')') || 0);
+        var dg = tt/sl;
+        $('.spare_stock_price:eq('+rowIndex+')').val(dg.toFixed(4));
+        
+    });
    
     $('.number').keyup(function(event) {
 
@@ -1082,6 +1151,7 @@ function addRow(tableID){
     $('.spare_part:last').val("");
     $('.spare_stock_price:last').val("");
     $('.spare_stock_number:last').val("");
+    $('.spare_stock_total:last').val("");
     
     
     $('input[name="chk"]:last').attr('data',"");
@@ -1153,6 +1223,37 @@ $('.spare_part').blur(function(){
     };
     
 });
+
+$('.spare_stock_number').keyup(function(){
+          var row = $(this).parent().parent().parent().parent().parent().parent();
+          var rowIndex = row[0].rowIndex;
+
+          var sl = parseFloat(get_number('.spare_stock_number:eq('+rowIndex+')') || 0);
+          var dg = parseFloat(get_number('.spare_stock_price:eq('+rowIndex+')') || 0);
+          var tt = sl*dg;
+          $('.spare_stock_total:eq('+rowIndex+')').val(tt.toFixed(4));
+          
+      });
+      $('.spare_stock_price').keyup(function(){
+          var row = $(this).parent().parent().parent().parent().parent().parent();
+          var rowIndex = row[0].rowIndex;
+
+          var sl = parseFloat(get_number('.spare_stock_number:eq('+rowIndex+')') || 0);
+          var dg = parseFloat(get_number('.spare_stock_price:eq('+rowIndex+')') || 0);
+          var tt = sl*dg;
+          $('.spare_stock_total:eq('+rowIndex+')').val(tt.toFixed(4));
+          
+      });
+      $('.spare_stock_total').keyup(function(){
+          var row = $(this).parent().parent().parent().parent().parent().parent();
+          var rowIndex = row[0].rowIndex;
+
+          var sl = parseFloat(get_number('.spare_stock_number:eq('+rowIndex+')') || 0);
+          var tt = parseFloat(get_number('.spare_stock_total:eq('+rowIndex+')') || 0);
+          var dg = tt/sl;
+          $('.spare_stock_price:eq('+rowIndex+')').val(dg.toFixed(4));
+          
+      });
 
     $('.number').keyup(function(event) {
 
